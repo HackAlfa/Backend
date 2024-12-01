@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/cache"
+	"backend/ml"
 	"backend/server"
 	"flag"
 	"log/slog"
@@ -47,19 +48,19 @@ func main() {
 		os.Exit(0)
 	}
 
-	// mlCfg, err := ml.GetConfig()
-	// if err != nil {
-	// 	slog.Error(err.Error())
-	// 	os.Exit(0)
-	// }
+	mlCfg, err := ml.GetConfig()
+	if err != nil {
+		slog.Error(err.Error())
+		os.Exit(0)
+	}
 
 	slog.Info("Starting modules...")
 
-	// err = ml.SetUp(mlCfg)
-	// if err != nil {
-	// 	slog.Error(err.Error())
-	// 	os.Exit(0)
-	// }
+	err = ml.SetUp(mlCfg)
+	if err != nil {
+		slog.Error(err.Error())
+		os.Exit(0)
+	}
 
 	err = cache.Start(cacheCfg)
 	if err != nil {
