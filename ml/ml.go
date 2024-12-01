@@ -41,16 +41,16 @@ func SetUp(cfg *Config) error {
 
 	mlAddress = "http://" + cfg.address
 
-	_, err := http.Get(mlAddress)
-	times := retry
-	for err != nil && times > 0 {
-		_, err = http.Get(mlAddress)
-		times--
-		time.After(time.Second)
-	}
-	if err != nil {
-		return err
-	}
+	// _, err := http.Get(mlAddress)
+	// times := retry
+	// for err != nil && times > 0 {
+	// 	_, err = http.Get(mlAddress)
+	// 	times--
+	// 	time.After(time.Second)
+	// }
+	// if err != nil {
+	// 	return err
+	// }
 
 	slog.Debug("ml started...")
 
@@ -81,7 +81,9 @@ func GetRecomendationFromModel(rawJson []byte) (string, error) {
 	slog.Debug("Getting recomendation from model...")
 
 	buf := bytes.NewReader(rawJson)
+
 	res, err := http.Post(mlAddress, "application/json", buf)
+	slog.Info("request for model", "mlAddress", mlAddress, "buf", string(rawJson))
 	if err != nil {
 		slog.Error(err.Error())
 		return "", err
@@ -93,6 +95,7 @@ func GetRecomendationFromModel(rawJson []byte) (string, error) {
 	for scanner.Scan() {
 		jsonstr += scanner.Text()
 	}
+	slog.Info("json from model", "json", jsonstr)
 
 	//caching
 	slog.Debug("Caching...")
